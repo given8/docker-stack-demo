@@ -3,6 +3,9 @@ const redis = require('redis')
 const { MongoClient, ServerApiVersion } = require('mongodb')
 
 const app = express()
+app.set('view-engine','ejs')
+app.use(express.json())
+app.use(express.urlencoded())
 const port = 3000
 
 const mongoUri = "mongodb://user:pass@localhost:27017"
@@ -18,18 +21,12 @@ const mongo = new MongoClient(mongoUri, {
 const redisClient = redis.createClient({ url: "redis://localhost:6379" })
 redisClient.connect()
 
-app.get("/", async (req, res) => {
-    const numVisit = await redisClient.get("page-visit")
-    redisClient.incr("page-visit")
-    res.send("Hello World " + numVisit)
-})
-
 /**
  * 
  * @param {Express} app 
  * @param {MongoClient} mongoClient 
  */
-async function start(app, mongoClient) {
+async function start(app, mongoClient,port) {
     try {
         await mongoClient.connect()
 
@@ -40,8 +37,35 @@ async function start(app, mongoClient) {
             console.log(`listening on port ${port}`)
         })
     } finally {
-        mongoClient.close()
+        // mongoClient.close()
     }
 }
 
-start(app, mongo).catch(console.dir)
+start(app, mongo,port).catch(console.dir)
+
+app.get("/", async (req, res) => {
+    const numVisit = await redisClient.get("page-visit")
+    redisClient.incr("page-visit")
+    const cursor = await mongo.db("test").collection("posts").find()
+    const posts = []
+    while (cursor.hasNext){
+        const post = await cursor.next()
+        if(!post){
+            break;
+        }
+        console.log(post)
+        posts.push(post)
+    }
+    res.render('index.ejs',{numVisit,posts})
+})
+
+app.get("/new", async (req,res)=>{
+    res.render('new.ejs')
+})
+
+app.post("/new",async (req,res)=>{
+    const {body,title} = req.body
+    console.log(body,title)
+    await mongo.db("test").collection("posts").insertOne({title:title,body:body})
+    res.sendStatus(201)
+})
