@@ -66,6 +66,16 @@ app.get("/new", async (req,res)=>{
 app.post("/new",async (req,res)=>{
     const {body,title} = req.body
     console.log(body,title)
-    await mongo.db("test").collection("posts").insertOne({title:title,body:body})
-    res.sendStatus(201)
+    try {
+        await mongo.db("test").collection("posts").insertOne({title:title,body:body})
+        res.redirect("/")
+        }catch(e){
+            console.log(e)
+            res.status(400)
+    }
+})
+
+app.delete("/delete", async ()=>{
+    mongo.db("test").collection("posts").deleteMany()
+    res.status(204)
 })
