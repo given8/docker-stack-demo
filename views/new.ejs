@@ -3,13 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css"
+  >
     <title>New Post</title>
 </head>
 <body>
-    <form action="/new" method="post">
-        <input type="text" name="title" id="">
-        <input type="text" name="body" id="">
-        <button type="submit">Submit</button>
+    <form action="/new" method="post" class="box">
+        <div class="field">
+            <label class="label" for="title">Title</label>
+            <div class="control">
+                <input class="input" type="text" name="title" id="">
+            </div>
+        </div>
+        <div class="field">
+            <label for="body" class="label">Body</label>
+            <div class="control">
+                <input class="input" type="text" name="body" id="">
+            </div>
+        </div>
+        <div class="field">
+            <button class="button" type="submit">Submit</button>
+        </div>
     </form>
+    <a href="/" class="button is-primary">
+        Back
+    </a>
 </body>
 </html>
