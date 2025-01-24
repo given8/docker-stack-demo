@@ -53,7 +53,6 @@ app.get("/", async (req, res) => {
         if(!post){
             break;
         }
-        console.log(post)
         posts.push(post)
     }
     res.render('index.ejs',{numVisit,posts})
@@ -65,7 +64,6 @@ app.get("/new", async (req,res)=>{
 
 app.post("/new",async (req,res)=>{
     const {body,title} = req.body
-    console.log(body,title)
     try {
         await mongo.db("test").collection("posts").insertOne({title:title,body:body})
         res.redirect("/")
