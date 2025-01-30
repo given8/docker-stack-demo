@@ -8,7 +8,7 @@ app.use(express.json())
 app.use(express.urlencoded())
 const port = 3000
 
-const mongoUri = "mongodb://user:pass@localhost:27017"
+const mongoUri = "mongodb://user:pass@mongo:27017"
 
 const mongo = new MongoClient(mongoUri, {
     serverApi: {
@@ -18,7 +18,7 @@ const mongo = new MongoClient(mongoUri, {
     }
 });
 
-const redisClient = redis.createClient({ url: "redis://localhost:6379" })
+const redisClient = redis.createClient({ url: "redis://redis:6379" })
 redisClient.connect()
 
 /**
